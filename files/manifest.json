@@ -1,0 +1,8 @@
+{
+"name":"StockSnap",
+"short_name":"StockSnap",
+"display":"standalone",
+"start_url":"/",
+"background_color":"#ffffff",
+"theme_color":"#c62828"
+}
