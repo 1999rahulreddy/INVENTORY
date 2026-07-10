@@ -1,0 +1,68 @@
+---
+- hosts: web
+  become: yes
+
+  tasks:
+
+    - name: Update apt
+      apt:
+        update_cache: yes
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Enable nginx
+      service:
+        name: nginx
+        enabled: yes
+        state: started
+
+    - name: Remove default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Create website directory
+      file:
+        path: /var/www/inventory
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: "0755"
+
+    - name: Copy website
+      copy:
+        src: ../public/
+        dest: /var/www/inventory/
+
+    - name: Configure nginx
+      copy:
+        dest: /etc/nginx/sites-available/inventory
+        content: |
+          server {
+              listen 80;
+              server_name _;
+              root /var/www/inventory;
+              index index.html;
+
+              location / {
+                  try_files $uri $uri/ /index.html;
+              }
+          }
+
+    - name: Enable inventory site
+      file:
+        src: /etc/nginx/sites-available/inventory
+        dest: /etc/nginx/sites-enabled/inventory
+        state: link
+        force: yes
+
+    - name: Test nginx
+      command: nginx -t
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
