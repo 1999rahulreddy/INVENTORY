@@ -1,68 +1,69 @@
 ---
-- hosts: web
-  become: yes
+- name: Deploy INVENTORY
+  hosts: web
+  become: true
 
   tasks:
-
-    - name: Update apt
+    - name: Update apt cache
       apt:
         update_cache: yes
+        cache_valid_time: 3600
 
     - name: Install nginx
       apt:
         name: nginx
         state: present
 
-    - name: Enable nginx
-      service:
-        name: nginx
-        enabled: yes
-        state: started
-
-    - name: Remove default nginx site
+    - name: Remove old inventory site config
       file:
-        path: /etc/nginx/sites-enabled/default
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/nginx/sites-enabled/inventory
+        - /etc/nginx/sites-available/inventory
+
+    - name: Remove default nginx page
+      file:
+        path: /var/www/html/index.nginx-debian.html
         state: absent
 
-    - name: Create website directory
+    - name: Create web root
       file:
-        path: /var/www/inventory
+        path: /var/www/html
         state: directory
         owner: www-data
         group: www-data
         mode: "0755"
 
-    - name: Copy website
+    - name: Copy website files
       copy:
         src: ../public/
-        dest: /var/www/inventory/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: preserve
 
-    - name: Configure nginx
+    - name: Copy nginx configuration
       copy:
-        dest: /etc/nginx/sites-available/inventory
-        content: |
-          server {
-              listen 80;
-              server_name _;
-              root /var/www/inventory;
-              index index.html;
+        src: nginx.conf
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: "0644"
 
-              location / {
-                  try_files $uri $uri/ /index.html;
-              }
-          }
-
-    - name: Enable inventory site
+    - name: Enable default site
       file:
-        src: /etc/nginx/sites-available/inventory
-        dest: /etc/nginx/sites-enabled/inventory
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
         state: link
         force: yes
 
-    - name: Test nginx
+    - name: Test nginx configuration
       command: nginx -t
+      changed_when: false
 
     - name: Restart nginx
       service:
         name: nginx
         state: restarted
+        enabled: yes

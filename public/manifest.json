@@ -1,0 +1,8 @@
+{
+    "name": "Yen Bros Inventory",
+    "short_name": "Yen Bros",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#f4f4f4",
+    "theme_color": "#2f5496"
+}
