@@ -17,7 +17,7 @@ const inventory = [
             { description: "Cheese- Feta Hard 11 kg", unit: "PL", par: 0 },
             { description: "Cheese- Mozz Pizza 20% 8X2.27 kg", unit: "CS", par: 0 },
             { description: "Cheese- Ricotta 10% MF 500 G", unit: "EA", par: 0 },
-            { description: "Cheese- Ricotta 10% MF 12x500 g", unit: "CS", par: 0 },
+            //{ description: "Cheese- Ricotta 10% MF 12x500 g", unit: "CS", par: 0 },
             { description: "Cheese Shred- Cheddar MED 2x2.5 kg 88560", unit: "CS", par: 0 },
             { description: "Vegan Shred- Mozz Flavour 3x2.27 kg", unit: "CS", par: 0 }
         ]
@@ -63,7 +63,7 @@ const inventory = [
             { description: "Diet Coke Can", unit: "CS", par: 0 },
             { description: "Diet Coke Bottle 500 ml", unit: "CS", par: 0 },
             { description: "Diet Coke Bottle 2 L", unit: "CS", par: 0 },
-            { description: "Coke Zero Can", unit: "CS", par: 0 },
+            { description: "Coke Zero Can", unit: "CS", par: 1 },
             { description: "Coke Zero Bottle 500 ml", unit: "CS", par: 0 },
             { description: "Coke Zero Bottle 2 L", unit: "CS", par: 0 },
             { description: "Sprite Can", unit: "CS", par: 0 },
@@ -112,8 +112,8 @@ const inventory = [
         category: "Dry Goods",
         items: [
             { description: "Yeast- Dry Instant 20x454 g", unit: "CS", par: 0 },
-            { description: "Flour- High Gluten 20 kg", unit: "SK", par: 0 },
-            { description: "Canola Oil 16 lt", unit: "BX", par: 0 },
+            { description: "Flour- High Gluten 20 kg", unit: "SK", par: 5 },
+            { description: "Canola Oil 16 lt", unit: "BX", par: 1 },
             { description: "Salt- Hygrade 20 kg", unit: "SK", par: 0 },
             { description: "Sugar- Granulated Fine 20 kg", unit: "SK", par: 0 }
         ]
@@ -166,11 +166,11 @@ const inventory = [
             { description: "Wax Sheet 12x12", unit: "CS", par: 0 },
             { description: "Wax Sheet 14x14", unit: "CS", par: 0 },
             { description: "Wax Sheet 16x16", unit: "CS", par: 0 },
-            { description: "Pizza Box 8 Inch", unit: "BD", par: 0 },
-            { description: "Pizza Box 10 Inch", unit: "BD", par: 0 },
-            { description: "Pizza Box 12 Inch", unit: "BD", par: 0 },
-            { description: "Pizza Box 14 Inch", unit: "BD", par: 0 },
-            { description: "Pizza Box 16 Inch", unit: "BD", par: 0 }
+            { description: "Pizza Box 8 Inch", unit: "BD", par: 1 },
+            { description: "Pizza Box 10 Inch", unit: "BD", par: 3 },
+            { description: "Pizza Box 12 Inch", unit: "BD", par: 3 },
+            { description: "Pizza Box 14 Inch", unit: "BD", par: 1 },
+            { description: "Pizza Box 16 Inch", unit: "BD", par: 1 }
         ]
     },
 

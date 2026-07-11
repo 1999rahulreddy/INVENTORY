@@ -86,6 +86,8 @@ function renderCategory(index) {
             <label class="field-label">Count
                 <input
                     type="number"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
                     min="0"
                     value="${entry.count}"
                     placeholder="Count"
@@ -162,6 +164,85 @@ function renderReview() {
 
 }
 
+function buildOrderText() {
+
+    const lines = [];
+
+    lines.push(`Yen Bros Order - ${new Date().toLocaleDateString()}`);
+    lines.push("");
+
+    let anyOrders = false;
+
+    inventory.forEach(category => {
+
+        const rows = category.items
+            .map(item => {
+                const entry = getEntry(item.description);
+                const count = Number(entry.count) || 0;
+                const par = Number(item.par) || 0;
+                const order = Math.max(par - count, 0);
+                return { item, count, par, order };
+            })
+            .filter(row => row.order > 0);
+
+        if (rows.length === 0) {
+            return;
+        }
+
+        anyOrders = true;
+
+        lines.push(category.category);
+
+        rows.forEach(row => {
+            lines.push(`  ${row.item.description} - ${row.order} ${row.item.unit}`);
+        });
+
+        lines.push("");
+
+    });
+
+    if (!anyOrders) {
+        lines.push("Nothing needs ordering - every item is at or above par.");
+    }
+
+    return lines.join("\n");
+
+}
+
+function downloadOrder() {
+
+    const text = buildOrderText();
+
+    const blob = new Blob([text], { type: "text/plain" });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = `yenbros-order-${new Date().toISOString().slice(0, 10)}.txt`;
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+}
+
+function copyOrder() {
+
+    const text = buildOrderText();
+
+    navigator.clipboard.writeText(text)
+        .then(() => alert("Order copied - paste it into the Yen Bros order form."))
+        .catch(() => alert("Couldn't copy automatically - use Download instead."));
+
+}
+
 function renderOrder() {
 
     progress.textContent = "Order";
@@ -232,6 +313,31 @@ function renderOrder() {
 
     }
 
+    const actionRow = document.createElement("div");
+
+    actionRow.className = "button-row";
+
+    const copyBtn = document.createElement("button");
+
+    copyBtn.textContent = "Copy Order";
+
+    copyBtn.className = "secondary";
+
+    copyBtn.onclick = copyOrder;
+
+    const downloadBtn = document.createElement("button");
+
+    downloadBtn.textContent = "Download Order";
+
+    downloadBtn.className = "secondary";
+
+    downloadBtn.onclick = downloadOrder;
+
+    actionRow.appendChild(copyBtn);
+    actionRow.appendChild(downloadBtn);
+
+    app.appendChild(actionRow);
+
     const home = document.createElement("button");
 
     home.textContent = "Home";
@@ -254,7 +360,16 @@ function createTopNavigation() {
 
     home.onclick = renderHome;
 
+    const review = document.createElement("button");
+
+    review.textContent = "Review";
+
+    review.className = "secondary";
+
+    review.onclick = renderReview;
+
     row.appendChild(home);
+    row.appendChild(review);
 
     app.appendChild(row);
 
